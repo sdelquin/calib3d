@@ -1,7 +1,6 @@
 from pathlib import Path
 
 import yaml
-from rich import print
 from rich.console import Console
 from rich.table import Table
 
@@ -9,18 +8,9 @@ import settings
 
 
 class Calibration:
-    def __init__(self, config_file: Path = settings.CONFIG_FILE):
+    def __init__(self, x, y, z, config_file: Path = settings.CONFIG_FILE):
         self.config = yaml.load(config_file.read_text(), Loader=yaml.FullLoader)
-
-    def read_measurements(self):
-        self.measurements = {}
-        print(
-            f'[dim]Enter measurements for {self.config["cube-side"]}mm '
-            'calibration cube:[/dim]'
-        )
-        for axis, color in settings.AXIS_COLORS.items():
-            print(f'[bold {color}]{axis}:[/bold {color}]', end=' ')
-            self.measurements[axis] = float(input())
+        self.measurements = {'X': x, 'Y': y, 'Z': z}
 
     def calculate_errors(self):
         self.errors = {}
