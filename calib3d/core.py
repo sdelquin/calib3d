@@ -5,6 +5,7 @@ from rich.console import Console
 from rich.table import Table
 
 import settings
+from calib3d import utils
 
 
 class Calibration:
@@ -15,16 +16,20 @@ class Calibration:
     def calculate_errors(self):
         self.errors = {}
         for axis, measurement in self.measurements.items():
-            self.errors[axis] = measurement - self.config['cube-side']
+            self.errors[axis] = measurement - self.config['calcube']['side']
 
     def fix_steps(self):
         self.steps = {}
         for axis, measurement in self.measurements.items():
             self.steps[axis] = (
-                measurement * self.config['axis-steps'][axis] / self.config['cube-side']
+                measurement
+                * self.config['axis-steps'][axis]
+                / self.config['calcube']['side']
             )
 
-    def show_steps(self):
+    def show_results(self):
+        console = Console()
+
         table = Table()
         table.add_column(style='italic')
 
@@ -34,22 +39,20 @@ class Calibration:
         values = (f'{measurement:.2f}' for measurement in self.measurements.values())
         table.add_row('Measurements', *values)
 
-        display = []
-        for error in self.errors.values():
-            if error > 0:
-                color = 'green'
-            elif error < 0:
-                color = 'red'
-            else:
-                color = 'white'
-            display.append(f'[{color}]{error:.2f}[/{color}]')
-        table.add_row('Errors', *display)
+        values = (f'{utils.colorize_value(error)}' for error in self.errors.values())
+        table.add_row('Errors', *values)
 
         values = (f'{steps:.2f}' for steps in self.config['axis-steps'].values())
-        table.add_row('Current steps', *values)
+        table.add_row('Current steps', *values, end_section=True)
 
         values = (f'{steps:.2f}' for steps in self.steps.values())
         table.add_row('Fixed steps', *values, style='yellow')
 
-        console = Console()
         console.print(table)
+
+        console.print(
+            'Calibrating 3D printer stepping motors from a '
+            f'{self.config["calcube"]["side"]}mm cube\n'
+            f'{self.config["calcube"]["url"]}',
+            style='dim italic',
+        )

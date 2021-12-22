@@ -20,7 +20,7 @@ def run(
     calib = Calibration(x, y, z)
     calib.calculate_errors()
     calib.fix_steps()
-    calib.show_steps()
+    calib.show_results()
 
 
 if __name__ == "__main__":
