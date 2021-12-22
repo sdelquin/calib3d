@@ -14,9 +14,11 @@ class Calibration:
         self.measurements = {'X': x, 'Y': y, 'Z': z}
 
     def calculate_errors(self):
-        self.errors = {}
+        calcube_side = self.config['calcube']['side']
+        self.abs_errors, self.rel_errors = {}, {}
         for axis, measurement in self.measurements.items():
-            self.errors[axis] = measurement - self.config['calcube']['side']
+            self.abs_errors[axis] = measurement - calcube_side
+            self.rel_errors[axis] = self.abs_errors[axis] * 100 / calcube_side
 
     def fix_steps(self):
         self.steps = {}
@@ -36,14 +38,20 @@ class Calibration:
         for axis, color in settings.AXIS_COLORS.items():
             table.add_column(f'{axis}', header_style=color)
 
+        values = (f'{steps:.2f}' for steps in self.config['axis-steps'].values())
+        table.add_row('Current steps', *values, end_section=True)
+
         values = (f'{measurement:.2f}' for measurement in self.measurements.values())
         table.add_row('Measurements', *values)
 
-        values = (f'{utils.colorize_value(error)}' for error in self.errors.values())
-        table.add_row('Errors', *values)
+        values = (f'{utils.format_value(error)}' for error in self.abs_errors.values())
+        table.add_row('Abs. errors', *values)
 
-        values = (f'{steps:.2f}' for steps in self.config['axis-steps'].values())
-        table.add_row('Current steps', *values, end_section=True)
+        values = (
+            f'{utils.format_value(error, format=".1f", suffix="%")}'
+            for error in self.rel_errors.values()
+        )
+        table.add_row('Rel. errors', *values, end_section=True)
 
         values = (f'{steps:.2f}' for steps in self.steps.values())
         table.add_row('Fixed steps', *values, style='yellow')

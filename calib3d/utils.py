@@ -1,5 +1,11 @@
-def colorize_value(
-    value, lt_color='red', eq_color='green', gt_color='cyan', threshold=0, format='.2f'
+def format_value(
+    value,
+    lt_color='red',
+    eq_color='green',
+    gt_color='cyan',
+    threshold=0,
+    format='.2f',
+    suffix='',
 ):
     if value < threshold:
         color = lt_color
@@ -7,4 +13,4 @@ def colorize_value(
         color = gt_color
     else:
         color = eq_color
-    return f'[{color}]{value:{format}}[/{color}]'
+    return f'[{color}]{value:{format}}{suffix}[/{color}]'
