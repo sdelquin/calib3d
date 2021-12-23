@@ -55,12 +55,14 @@ class Display:
         )
 
     def print_gcode(self):
-        fixed_steps = ' '.join(
-            f'{axis}{step:.2f}'
-            for axis, step in self.calibration.steps.items()
-            if not self.calibration.valid_errors[axis]
-        )
-        self.console.print(f'[dark_orange]G-code: M92 {fixed_steps}[/dark_orange]')
+        values = []
+        for axis, color in settings.AXIS_COLORS.items():
+            if not self.calibration.valid_errors[axis]:
+                values.append(
+                    f'[{color}]{axis}{self.calibration.steps[axis]:.2f}[/{color}]'
+                )
+        fixed_steps = ' '.join(values)
+        self.console.print(f'[dim]G-code:[/dim] M92 {fixed_steps}')
 
     def print(self):
         table = Table()
