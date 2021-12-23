@@ -29,7 +29,7 @@ class Calibration:
                 / self.config['calcube']['side']
             )
 
-    def show_results(self):
+    def show_results(self, show_gcode=False):
         console = Console()
 
         table = Table()
@@ -64,3 +64,10 @@ class Calibration:
             f'{self.config["calcube"]["url"]}',
             style='dim italic',
         )
+
+        if show_gcode:
+            fixed_steps = ' '.join(f'{axis}{step:.2f}' for axis, step in self.steps.items())
+            console.print(
+                f'\n[dark_orange]G-code: M92 {fixed_steps} '
+                f'E{self.config["extrusion"]:.2f}[/dark_orange]'
+            )
