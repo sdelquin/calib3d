@@ -10,8 +10,9 @@ from calib3d import utils
 
 class Calibration:
     def __init__(self, x, y, z, config_file: Path = settings.CONFIG_FILE):
-        self.config = yaml.load(config_file.read_text(), Loader=yaml.FullLoader)
         self.measurements = {'X': x, 'Y': y, 'Z': z}
+        self.config_file = config_file
+        self.config = yaml.load(config_file.read_text(), Loader=yaml.FullLoader)
 
     def calculate_errors(self):
         calcube_side = self.config['calcube']['side']
@@ -28,6 +29,14 @@ class Calibration:
                 * self.config['axis-steps'][axis]
                 / self.config['calcube']['side']
             )
+
+    def update_steps(self):
+        self.config['axis-steps'] = self.steps
+        # Fix floating point issues
+        for axis in self.config['axis-steps']:
+            self.config['axis-steps'][axis] = round(self.config['axis-steps'][axis], 2)
+        output = yaml.dump(self.config, Dumper=yaml.Dumper)
+        self.config_file.write_text(output)
 
     def show_results(self, show_gcode=False):
         console = Console()

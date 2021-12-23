@@ -19,11 +19,20 @@ def run(
     gcode: bool = typer.Option(
         False, '-g', '--gcode', help='Dump G-code', show_default=False
     ),
+    update_steps: bool = typer.Option(
+        False,
+        '-u',
+        '--update',
+        help='Update fixed steps on config file',
+        show_default=False,
+    ),
 ):
     calib = Calibration(x, y, z)
     calib.calculate_errors()
     calib.fix_steps()
     calib.show_results(show_gcode=gcode)
+    if update_steps:
+        calib.update_steps()
 
 
 if __name__ == "__main__":
