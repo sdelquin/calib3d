@@ -42,5 +42,5 @@ class Calibration:
         output = yaml.dump(self.config, Dumper=yaml.Dumper)
         self.config_file.write_text(output)
 
-    def show_results(self, show_gcode=False):
-        display.Display(self, show_gcode).print()
+    def show_results(self, show_gcode=False, show_details=False):
+        display.Display(self, show_gcode, show_details).print()

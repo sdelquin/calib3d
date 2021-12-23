@@ -6,9 +6,10 @@ from calib3d import utils
 
 
 class Display:
-    def __init__(self, calibration, show_gcode=False):
+    def __init__(self, calibration, show_gcode=False, show_details=False):
         self.calibration = calibration
         self.show_gcode = show_gcode
+        self.show_details = show_details
         self.console = Console()
 
     def add_header(self, table):
@@ -51,7 +52,12 @@ class Display:
         self.console.print(
             'Calibrating 3D printer stepping motors from a '
             f'{self.calibration.config["calcube"]["side"]}mm cube',
-            style='dim italic',
+            style='tan',
+        )
+        self.console.print(
+            'Valid errors equal or lower than '
+            f'{self.calibration.config["calcube"]["valid-error"]}mm',
+            style='tan',
         )
 
     def print_gcode(self):
@@ -65,6 +71,8 @@ class Display:
         self.console.print(f'[dim]G-code:[/dim] M92 {fixed_steps}')
 
     def print(self):
+        if self.show_details:
+            self.print_details()
         table = Table()
         self.add_header(table)
         self.add_current_steps(table)
@@ -72,6 +80,5 @@ class Display:
         self.add_errors(table)
         self.add_fixed_steps(table)
         self.print_table(table)
-        self.print_details()
         if self.show_gcode:
             self.print_gcode()

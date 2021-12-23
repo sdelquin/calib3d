@@ -19,6 +19,9 @@ def run(
     gcode: bool = typer.Option(
         False, '-g', '--gcode', help='Dump G-code', show_default=False
     ),
+    verbose: bool = typer.Option(
+        False, '-v', '--verbose', help='Verbose mode', show_default=False
+    ),
     update_steps: bool = typer.Option(
         False,
         '-u',
@@ -30,7 +33,7 @@ def run(
     calib = Calibration(x, y, z)
     calib.calculate_errors()
     calib.fix_steps()
-    calib.show_results(show_gcode=gcode)
+    calib.show_results(show_gcode=gcode, show_details=verbose)
     if update_steps:
         calib.update_steps()
 
