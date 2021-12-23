@@ -1,4 +1,4 @@
+config.yml
 *.pyc
 __pycache__
 .factory.yml
-config.yml
