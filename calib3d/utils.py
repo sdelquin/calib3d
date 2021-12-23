@@ -1,15 +1,16 @@
 def format_value(
     value,
-    lt_color='red',
-    eq_color='green',
-    gt_color='cyan',
+    lt_color='green',
+    eq_color='cyan',
+    gt_color='red',
     threshold=0,
     format='.2f',
     suffix='',
 ):
-    if value < threshold:
+    scale = abs(value)
+    if scale < threshold:
         color = lt_color
-    elif value > threshold:
+    elif scale > threshold:
         color = gt_color
     else:
         color = eq_color
