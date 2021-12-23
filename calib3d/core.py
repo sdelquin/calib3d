@@ -25,14 +25,14 @@ class Calibration:
         self.steps = {}
         for axis, measurement in self.measurements.items():
             if self.valid_errors[axis]:
-                step = self.config['steps'][axis]
+                result = self.config['steps'][axis]
             else:
-                step = (
-                    measurement
+                result = (
+                    self.config['calcube']['side']
                     * self.config['steps'][axis]
-                    / self.config['calcube']['side']
+                    / measurement
                 )
-            self.steps[axis] = step
+            self.steps[axis] = result
 
     def update_steps(self):
         self.config['steps'] = self.steps
