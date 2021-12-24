@@ -48,12 +48,12 @@ Options:
                  [required]
   -g, --gcode    Dump G-code
   -v, --verbose  Verbose mode
-  -u, --update   Update fixed steps on config file
+  -u, --update   Update fixed steps on config file and results on history file
   --help         Show this message and exit.
 ```
 
 - Dump G-code will output `M92` command **only for those axis** with errors outside confidence interval (`valid-error`).
-- Update fixed steps on config file will **overwrite** the file `config.yml` with the calculated steps.
+- Update fixed steps on config file will **overwrite** the file `config.yml` with the calculated steps. Furthemore, a `history.csv` file will be updated with the last results.
 
 ## References
 

@@ -26,7 +26,7 @@ def run(
         False,
         '-u',
         '--update',
-        help='Update fixed steps on config file',
+        help='Update fixed steps on config file and results on history file',
         show_default=False,
     ),
 ):
@@ -35,6 +35,7 @@ def run(
     calib.fix_steps()
     calib.show_results(show_gcode=gcode, show_details=verbose)
     if update_steps:
+        calib.dump_history()
         calib.update_steps()
 
 
